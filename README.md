@@ -16,5 +16,5 @@
 6. 执行命令 `make download -j8 V=s` 下载源码、交叉编译工具链、Linux内核等(需要能访问国际互联网, 此过程可能会有部分文件下载失败, 为保守起见最好执行2遍).
 7. 执行命令 `make -j8 V=s` 编译固件.
 
-## License
+## 许可
 OpenWrt is licensed under [GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html).
