@@ -1,5 +1,5 @@
 #!/bin/sh
-git pull
+#git pull
 ./scripts/feeds update -a
 ./scripts/feeds update -a
 ./scripts/feeds install -a
