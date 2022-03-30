@@ -1,0 +1,28 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ openwrt-21.02 ]
+  pull_request:
+    branches: [ openwrt-21.02 ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: prepare
+      run: ./openwrt/prebuild-common.sh
+    - name: config
+      run: cp ./openwrt/config-r4s ./openwrt/.config
+      
+    - name: Install dependencies
+      run: |
+          cd openwrt
+          make defconfig
+          make download -j8
+          make download -j8
+          make -j8
