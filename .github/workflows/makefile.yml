@@ -15,7 +15,10 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: prepare
-      run: ./openwrt/prebuild-common.sh
+      run: |
+          pwd
+          ls
+          ./openwrt/prebuild-common.sh
     - name: config
       run: cp ./openwrt/config-r4s ./openwrt/.config
       
