@@ -16,15 +16,12 @@ jobs:
     
     - name: prepare
       run: |
-          pwd
-          ls
-          ./openwrt/prebuild-common.sh
+          ./prebuild-common.sh
     - name: config
-      run: cp ./openwrt/config-r4s ./openwrt/.config
+      run: cp ./config-r4s .config
       
     - name: Install dependencies
       run: |
-          cd openwrt
           make defconfig
           make download -j8
           make download -j8
