@@ -196,6 +196,8 @@ foreach my $mirror (@ARGV) {
 		}
 	} elsif ($mirror =~ /^\@OPENWRT$/) {
 		# use OpenWrt source server directly
+	} elsif ($mirror =~ /^\@IMMORTALWRT$/) {
+		# use ImmortalWrt source server directly
 	} elsif ($mirror =~ /^\@APACHE\/(.+)$/) {
 		push @mirrors, "https://mirrors.tencent.com/apache/$1";
 		push @mirrors, "https://mirrors.aliyun.com/apache/$1";
@@ -276,7 +278,6 @@ foreach my $mirror (@ARGV) {
 }
 
 # push @mirrors, 'https://mirror01.download.immortalwrt.eu.org';
-push @mirrors, 'https://mirror2.immortalwrt.org/sources';
 push @mirrors, 'https://mirror.immortalwrt.org/sources';
 push @mirrors, 'https://sources.immortalwrt.org';
 push @mirrors, 'https://sources.cdn.immortalwrt.org';
