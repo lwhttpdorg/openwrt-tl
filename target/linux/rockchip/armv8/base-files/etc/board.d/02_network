@@ -8,14 +8,16 @@ rockchip_setup_interfaces()
 
 	case "$board" in
 	friendlyarm,nanopi-r2c|\
-	friendlyarm,nanopi-r2s|\
 	friendlyarm,nanopi-r4s|\
 	friendlyarm,nanopi-r4s-enterprise|\
 	xunlong,orangepi-r1-plus|\
 	xunlong,orangepi-r1-plus-lts)
 		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
 		;;
-	friendlyarm,nanopi-r5c|\
+	friendlyarm,nanopi-r2s)
+        ucidef_set_interfaces_lan_wan 'eth0' 'eth1'
+        ;;
+    friendlyarm,nanopi-r5c|\
 	lunzn,fastrhino-r66s)
 		ucidef_set_interfaces_lan_wan 'eth0' 'eth1'
 		;;
