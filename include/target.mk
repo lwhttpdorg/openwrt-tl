@@ -47,6 +47,7 @@ DEFAULT_PACKAGES.router:=\
 	firewall \
 	ip6tables \
 	iptables \
+	ipv6helper \
 	ppp \
 	ppp-mod-pppoe
 # For easy usage
