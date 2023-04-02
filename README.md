@@ -4,7 +4,7 @@
 
 这个项目fork自[ImmortalWrt](https://github.com/immortalwrt/immortalwrt)
 
-默认登录地址: http://10.0.0.1, 用户名: __root__, 密码: __password__.
+默认登录地址: http://172.16.0.1, 用户名: __root__, 密码: __password__.
 
 ## 如何编译自己需要的 OpenWrt 固件
 ### 快速开始
