@@ -380,7 +380,7 @@ define Device/beeline_smartbox-flash
   IMAGES += factory.trx
   IMAGE/factory.trx := append-kernel | append-ubi | check-size
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  DEVICE_PACKAGES := kmod-usb3 kmod-mt7615-firmware uencrypt-mbedtls
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt7615-firmware uencrypt-openssl
 endef
 TARGET_DEVICES += beeline_smartbox-flash
 
@@ -976,6 +976,16 @@ define Device/gnubee_gb-pc2
 endef
 TARGET_DEVICES += gnubee_gb-pc2
 
+define Device/hanyang_hyc-g920
+  $(Device/dsa-migration)
+  $(Device/uimage-lzma-loader)
+  DEVICE_VENDOR := Hanyang
+  DEVICE_MODEL := CJ-Hello HYC-G920
+  IMAGE_SIZE := 15744k
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt76x2 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += hanyang_hyc-g920
+
 define Device/h3c_tx180x
   $(Device/dsa-migration)
   BLOCKSIZE := 128k
@@ -1346,6 +1356,16 @@ define Device/jcg_y2
 endef
 TARGET_DEVICES += jcg_y2
 
+
+define Device/jdcloud_re-sp-01b
+  IMAGE_SIZE := 27328k
+  DEVICE_VENDOR := JDCloud
+  DEVICE_MODEL := RE-SP-01B
+  DEVICE_PACKAGES := kmod-fs-ext4 kmod-mt7603 kmod-mt7615e \
+	kmod-mt7615-firmware kmod-sdhci-mt7620 kmod-usb3
+endef
+TARGET_DEVICES += jdcloud_re-sp-01b
+
 define Device/keenetic_kn-3010
   $(Device/dsa-migration)
   $(Device/uimage-lzma-loader)
@@ -1604,7 +1624,7 @@ define Device/mts_wg430223
   IMAGES += factory.trx
   IMAGE/factory.trx := append-kernel | append-ubi | check-size
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
-  DEVICE_PACKAGES := kmod-mt7615-firmware uencrypt-mbedtls
+  DEVICE_PACKAGES := kmod-mt7615-firmware uencrypt-openssl
 endef
 TARGET_DEVICES += mts_wg430223
 

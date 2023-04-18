@@ -5,10 +5,10 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_VERSION:=2023.01
+PKG_VERSION:=2023.04
 PKG_RELEASE:=1
 
-PKG_HASH:=69423bad380f89a0916636e89e6dcbd2e4512d584308d922d1039d1e4331950f
+PKG_HASH:=e31cac91545ff41b71cec5d8c22afd695645cd6e2a442ccdacacd60534069341
 
 PKG_MAINTAINER:=Tobias Maedel <openwrt@tbspace.de>
 
@@ -59,6 +59,12 @@ define U-Boot/orangepi-r1-plus-lts-rk3328
     xunlong_orangepi-r1-plus-lts
 endef
 
+define U-Boot/roc-cc-rk3328
+  $(U-Boot/Default/rk3328)
+  NAME:=ROC-RK3328-CC
+  BUILD_DEVICES:= \
+    firefly_roc-rk3328-cc
+endef
 
 # RK3399 boards
 
@@ -143,6 +149,7 @@ UBOOT_TARGETS := \
   nanopi-r2s-rk3328 \
   orangepi-r1-plus-rk3328 \
   orangepi-r1-plus-lts-rk3328 \
+  roc-cc-rk3328 \
   fastrhino-r66s-rk3568 \
   fastrhino-r68s-rk3568 \
   nanopi-r5c-rk3568 \
@@ -151,17 +158,14 @@ UBOOT_TARGETS := \
 UBOOT_CONFIGURE_VARS += USE_PRIVATE_LIBGCC=yes
 
 UBOOT_MAKE_FLAGS += \
-  BL31=$(STAGING_DIR_IMAGE)/$(ATF)
+  PATH=$(STAGING_DIR_HOST)/bin:$(PATH) \
+  BL31=$(STAGING_DIR_IMAGE)/$(ATF) \
+  $(if $(DDR),ROCKCHIP_TPL=$(STAGING_DIR_IMAGE)/$(DDR))
 
 define Build/Configure
 	$(call Build/Configure/U-Boot)
 
 	$(SED) 's#CONFIG_MKIMAGE_DTC_PATH=.*#CONFIG_MKIMAGE_DTC_PATH="$(PKG_BUILD_DIR)/scripts/dtc/dtc"#g' $(PKG_BUILD_DIR)/.config
-
-ifneq ($(DDR),)
-	$(INSTALL_DIR) $(PKG_BUILD_DIR)/tpl
-	$(CP) $(STAGING_DIR_IMAGE)/$(DDR) $(PKG_BUILD_DIR)/tpl/u-boot-tpl.bin
-endif
 endef
 
 define Build/InstallDev
