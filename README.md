@@ -13,8 +13,8 @@
 3. 执行命令 `./scripts/feeds update -a` 获取feeds.conf / feeds.conf.default中定义的最新的包.
 4. 执行命令 `./scripts/feeds install -a` to install symlinks for all obtained packages into package/feeds/
 5. 执行命令 `make menuconfig` 选择你需要的toolchain, target system和firmware包生成配置文件.
-6. 执行命令 `make download -j8 V=sc` 下载源码、交叉编译工具链、Linux内核等(需要能访问国际互联网, 此过程可能会有部分文件下载失败, 为保守起见最好执行2遍).
-7. 执行命令 `make -j8 V=sc` 编译固件.
+6. 执行命令 `make download -j$(nproc) V=sc` 下载源码、交叉编译工具链、Linux内核等(需要能访问国际互联网, 此过程可能会有部分文件下载失败, 为保守起见最好执行2遍).
+7. 执行命令 `make -j$(nproc) V=sc` 编译固件.
 
 ## 许可
 OpenWrt is licensed under [GPL-3.0-only](https://spdx.org/licenses/GPL-3.0-only.html).
