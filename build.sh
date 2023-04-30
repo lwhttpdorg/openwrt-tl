@@ -1,5 +1,4 @@
 #!/bin/sh
-make download -j$(nproc) V=sc
-make download -j$(nproc) V=sc
-make -j$(nproc) V=sc
-
+make download -j12 V=99
+make download -j12 V=99
+make -j12 V=99
