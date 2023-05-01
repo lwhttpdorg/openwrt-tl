@@ -36,7 +36,8 @@ xunlong,orangepi-r1-plus-lts)
 	set_interface_core 2 "eth1"
 	set_interface_core 4 "eth0" "xhci-hcd:usb3"
 	;;
-friendlyarm,nanopi-r4s)
+friendlyarm,nanopi-r4s|\
+friendlyarm,nanopi-r4se)
 	set_interface_core 10 "eth0"
 	set_interface_core 20 "eth1"
 	;;
