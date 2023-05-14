@@ -16,6 +16,8 @@ include $(INCLUDE_DIR)/u-boot.mk
 include $(INCLUDE_DIR)/package.mk
 include ../arm-trusted-firmware-rockchip/atf-version.mk
 
+DTC:=
+
 define U-Boot/Default
   BUILD_TARGET:=rockchip
   UENV:=default
@@ -36,6 +38,13 @@ define U-Boot/nanopi-r2c-rk3328
   NAME:=NanoPi R2C
   BUILD_DEVICES:= \
     friendlyarm_nanopi-r2c
+endef
+
+define U-Boot/nanopi-r2c-plus-rk3328
+  $(U-Boot/Default/rk3328)
+  NAME:=NanoPi R2C Plus
+  BUILD_DEVICES:= \
+    friendlyarm_nanopi-r2c-plus
 endef
 
 define U-Boot/nanopi-r2s-rk3328
@@ -161,6 +170,7 @@ UBOOT_TARGETS := \
   rock-pi-4-rk3399 \
   rockpro64-rk3399 \
   nanopi-r2c-rk3328 \
+  nanopi-r2c-plus-rk3328 \
   nanopi-r2s-rk3328 \
   orangepi-r1-plus-rk3328 \
   orangepi-r1-plus-lts-rk3328 \
@@ -177,12 +187,6 @@ UBOOT_MAKE_FLAGS += \
   PATH=$(STAGING_DIR_HOST)/bin:$(PATH) \
   BL31=$(STAGING_DIR_IMAGE)/$(ATF) \
   $(if $(DDR),ROCKCHIP_TPL=$(STAGING_DIR_IMAGE)/$(DDR))
-
-define Build/Configure
-	$(call Build/Configure/U-Boot)
-
-	$(SED) 's#CONFIG_MKIMAGE_DTC_PATH=.*#CONFIG_MKIMAGE_DTC_PATH="$(PKG_BUILD_DIR)/scripts/dtc/dtc"#g' $(PKG_BUILD_DIR)/.config
-endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
