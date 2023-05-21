@@ -110,9 +110,13 @@
 			label = "lan3";
 		};
 
-		port@4 {
-			reg = <4>;
+		port@3 {
+			reg = <3>;
 			label = "wan";
+
+			nvmem-cells = <&macaddr_factory_14>;
+			nvmem-cell-names = "mac-address-ascii";
+			mac-address-increment = <1>;
 		};
 
 		port@6 {
