@@ -1320,6 +1320,12 @@ define Device/jcg_q20
 endef
 TARGET_DEVICES += jcg_q20
 
+define Device/jcg_q20-pb-boot
+  $(Device/jcg_q20)
+  DEVICE_MODEL += (pb-boot)
+endef
+TARGET_DEVICES += jcg_q20-pb-boot
+
 define Device/jcg_y2
   $(Device/dsa-migration)
   $(Device/uimage-lzma-loader)
@@ -2171,6 +2177,9 @@ define Device/tplink_mr600-v2-eu
   TPLINK_FLASHLAYOUT := 16Mltq
   DEVICE_PACKAGES := kmod-mt7603 kmod-mt7615e kmod-mt7663-firmware-ap \
 		kmod-usb-net-qmi-wwan uqmi kmod-usb3 -uboot-envtools
+  IMAGE/factory.bin := tplink-v2-image -e -a 0x10000
+  IMAGE/sysupgrade.bin := tplink-v2-image -s -e -a 0x10000 | check-size | \
+	append-metadata
   KERNEL := $(KERNEL_DTB) | uImage lzma
   KERNEL_INITRAMFS := $$(KERNEL) | tplink-v2-header
   TPLINK_BOARD_ID := MR600-V2-EU
