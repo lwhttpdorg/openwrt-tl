@@ -141,6 +141,22 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  		};
  	};
  
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+@@ -15,6 +15,13 @@
+ 	model = "FriendlyElec NanoPC-T4";
+ 	compatible = "friendlyarm,nanopc-t4", "rockchip,rk3399";
+ 
++	aliases {
++		led-boot = &status_led;
++		led-failsafe = &status_led;
++		led-running = &status_led;
++		led-upgrade = &status_led;
++	};
++
+ 	vcc12v0_sys: vcc12v0-sys {
+ 		compatible = "regulator-fixed";
+ 		regulator-always-on;
 --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
 @@ -19,6 +19,13 @@
@@ -331,9 +347,9 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  #include "rk3588.dtsi"
  
  / {
-@@ -12,6 +14,11 @@
- 	aliases {
+@@ -13,6 +15,11 @@
  		mmc0 = &sdhci;
+ 		mmc1 = &sdmmc;
  		serial2 = &uart2;
 +
 +		led-boot = &status_led;
@@ -343,7 +359,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  	};
  
  	chosen {
-@@ -57,6 +64,17 @@
+@@ -58,6 +65,17 @@
  		vin-supply = <&vcc5v0_sys>;
  	};
  
@@ -361,7 +377,7 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  	vcc5v0_sys: vcc5v0-sys-regulator {
  		compatible = "regulator-fixed";
  		regulator-name = "vcc5v0_sys";
-@@ -210,6 +228,12 @@
+@@ -211,6 +229,12 @@
  		};
  	};
  
