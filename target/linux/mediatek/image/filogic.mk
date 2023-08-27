@@ -98,6 +98,21 @@ define Device/asus_tuf-ax4200
 endef
 TARGET_DEVICES += asus_tuf-ax4200
 
+define Device/acer_predator-w6
+  DEVICE_VENDOR := Acer
+  DEVICE_MODEL := Predator W6
+  DEVICE_DTS := mt7986a-acer-predator-w6
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_DTS_LOADADDR := 0x47000000
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt7986-firmware kmod-mt7916-firmware mt7986-wo-firmware e2fsprogs f2fsck mkf2fs
+  IMAGES := sysupgrade.bin
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += acer_predator-w6
+
 define Device/bananapi_bpi-r3
   DEVICE_VENDOR := Bananapi
   DEVICE_MODEL := BPi-R3
@@ -230,6 +245,27 @@ define Device/h3c_magic-nx30-pro
 endef
 TARGET_DEVICES += h3c_magic-nx30-pro
 
+define Device/imou_lc-hx3001
+  DEVICE_VENDOR := Imou
+  DEVICE_MODEL := LC-HX3001
+  DEVICE_DTS := mt7981b-imou-lc-hx3001
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 113152k
+  KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  KERNEL = kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS = kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
+endef
+TARGET_DEVICES += imou_lc-hx3001
+
 define Device/jcg_q30-ubootmod
   DEVICE_VENDOR := JCG
   DEVICE_MODEL := Q30 (custom U-Boot layout)
@@ -286,18 +322,20 @@ endef
 TARGET_DEVICES += livinet_zr-3020-ubootmod
 
 define Device/netgear_wax220
-  DEVICE_VENDOR := Netgear
+  DEVICE_VENDOR := NETGEAR
   DEVICE_MODEL := WAX220
   DEVICE_DTS := mt7986b-netgear-wax220
   DEVICE_DTS_DIR := ../dts
+  NETGEAR_ENC_MODEL := WAX220
+  NETGEAR_ENC_REGION := US
   DEVICE_PACKAGES := kmod-mt7986-firmware mt7986-wo-firmware
-  IMAGES := sysupgrade.bin
-  KERNEL_IN_UBI := 1
-  KERNEL := kernel-bin | lzma | \
-        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
-  KERNEL_INITRAMFS := kernel-bin | lzma | \
-        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+  IMAGE_SIZE := 32768k
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  IMAGES += factory.img
+  # Padding to 10M seems to be required by OEM web interface
+  IMAGE/factory.img := sysupgrade-tar | \
+	  pad-to 10M | check-size | netgear-encrypted-factory
 endef
 TARGET_DEVICES += netgear_wax220
 
@@ -463,6 +501,68 @@ define Device/tplink_tl-xdr6088
 endef
 TARGET_DEVICES += tplink_tl-xdr6088
 
+define Device/xiaomi_mi-router-wr30u-112m-nmbm
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := Mi Router WR30U (custom U-Boot layout)
+  DEVICE_DTS := mt7981b-xiaomi-mi-router-wr30u-112m-nmbm
+  DEVICE_DTS_DIR := ../dts
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS := initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
+endif
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += xiaomi_mi-router-wr30u-112m-nmbm
+
+define Device/xiaomi_mi-router-wr30u-stock
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := Mi Router WR30U (stock layout)
+  DEVICE_DTS := mt7981b-xiaomi-mi-router-wr30u-stock
+  DEVICE_DTS_DIR := ../dts
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS := initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-kernel.bin | ubinize-kernel
+endif
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += xiaomi_mi-router-wr30u-stock
+
+define Device/xiaomi_mi-router-wr30u-ubootmod
+  DEVICE_VENDOR := Xiaomi
+  DEVICE_MODEL := Mi Router WR30U (OpenWrt U-Boot layout)
+  DEVICE_DTS := mt7981b-xiaomi-mi-router-wr30u-ubootmod
+  DEVICE_DTS_DIR := ../dts
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+  KERNEL_IN_UBI := 1
+  UBOOTENV_IN_UBI := 1
+  IMAGES := sysupgrade.itb
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+  KERNEL := kernel-bin | gzip
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.itb := append-kernel | \
+        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+  ARTIFACTS := preloader.bin bl31-uboot.fip
+  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
+  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot xiaomi_mi-router-wr30u
+ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
+  ARTIFACTS += initramfs-factory.ubi
+  ARTIFACT/initramfs-factory.ubi := append-image-stage initramfs-recovery.itb | ubinize-kernel
+endif
+endef
+TARGET_DEVICES += xiaomi_mi-router-wr30u-ubootmod
+
 define Device/xiaomi_redmi-router-ax6000
   DEVICE_VENDOR := Xiaomi
   DEVICE_MODEL := Redmi Router AX6000 (custom U-Boot layout)
@@ -473,7 +573,10 @@ define Device/xiaomi_redmi-router-ax6000
   UBINIZE_OPTS := -E 5
   BLOCKSIZE := 128k
   PAGESIZE := 2048
+  IMAGE_SIZE := 112640k
   KERNEL_IN_UBI := 1
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += xiaomi_redmi-router-ax6000
@@ -544,6 +647,20 @@ define Device/zyxel_ex5601-t0-stock
 	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
 endef
 TARGET_DEVICES += zyxel_ex5601-t0-stock
+
+define Device/zyxel_ex5700-telenor
+  DEVICE_VENDOR := ZyXEL
+  DEVICE_MODEL := EX5700 (Telenor)
+  DEVICE_DTS := mt7986a-zyxel-ex5700-telenor
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7916-firmware kmod-ubootenv-nvram kmod-usb3 kmod-mt7986-firmware mt7986-wo-firmware
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 65536k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += zyxel_ex5700-telenor
 
 define Device/zyxel_nwa50ax-pro
   DEVICE_VENDOR := ZyXEL
