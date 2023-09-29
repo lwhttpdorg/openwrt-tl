@@ -3,19 +3,21 @@
 uci -q get system.@imm_init[0] > "/dev/null" || uci -q add system imm_init > "/dev/null"
 
 if ! uci -q get system.@imm_init[0].system_chn > "/dev/null"; then
-	uci -q batch <<-EOF
-		set system.@system[0].timezone="CST-8"
-		set system.@system[0].zonename="Asia/Shanghai"
+    uci -q batch <<-EOF
+        set system.@system[0].timezone="CST-8"
+        set system.@system[0].zonename="Asia/Shanghai"
+        set system.@system[0].conloglevel=4
+        set system.@system[0].cronloglevel=9
 
-		delete system.ntp.server
-		add_list system.ntp.server="0.cn.pool.ntp.org"
-		add_list system.ntp.server="1.cn.pool.ntp.org"
-		add_list system.ntp.server="2.cn.pool.ntp.org"
-		add_list system.ntp.server="3.cn.pool.ntp.org"
+        delete system.ntp.server
+        add_list system.ntp.server="0.cn.pool.ntp.org"
+        add_list system.ntp.server="1.cn.pool.ntp.org"
+        add_list system.ntp.server="2.cn.pool.ntp.org"
+        add_list system.ntp.server="3.cn.pool.ntp.org"
 
-		set system.@imm_init[0].system_chn="1"
-		commit system
-	EOF
+        set system.@imm_init[0].system_chn="1"
+        commit system
+    EOF
 fi
 
 sed -i 's,downloads.openwrt.org,mirrors.tencent.com/openwrt,g' /etc/opkg/distfeeds.conf
