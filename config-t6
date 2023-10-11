@@ -123,8 +123,6 @@ CONFIG_PCI_SUPPORT=y
 CONFIG_PCIE_SUPPORT=y
 CONFIG_USB_SUPPORT=y
 CONFIG_USB_GADGET_SUPPORT=y
-CONFIG_RTC_SUPPORT=y
-CONFIG_USES_DEVICETREE=y
 CONFIG_USES_SQUASHFS=y
 CONFIG_USES_EXT4=y
 CONFIG_ARCH_64BIT=y
@@ -173,7 +171,7 @@ CONFIG_TARGET_ROOTFS_PARTSIZE=256
 #
 # Global build settings
 #
-CONFIG_JSON_OVERVIEW_IMAGE_INFO=y
+# CONFIG_JSON_OVERVIEW_IMAGE_INFO is not set
 # CONFIG_ALL_NONSHARED is not set
 # CONFIG_ALL_KMODS is not set
 # CONFIG_ALL is not set
@@ -1621,7 +1619,7 @@ CONFIG_PACKAGE_procd=y
 
 CONFIG_PACKAGE_procd-seccomp=y
 # CONFIG_PACKAGE_procd-selinux is not set
-CONFIG_PACKAGE_procd-ujail=y
+# CONFIG_PACKAGE_procd-ujail is not set
 # CONFIG_PACKAGE_qos-scripts is not set
 # CONFIG_PACKAGE_refpolicy is not set
 CONFIG_PACKAGE_resolveip=y
@@ -1645,7 +1643,7 @@ CONFIG_PACKAGE_uci=y
 # CONFIG_PACKAGE_uencrypt-openssl is not set
 # CONFIG_PACKAGE_uencrypt-wolfssl is not set
 CONFIG_PACKAGE_urandom-seed=y
-CONFIG_PACKAGE_urngd=y
+# CONFIG_PACKAGE_urngd is not set
 CONFIG_PACKAGE_usign=y
 # CONFIG_PACKAGE_uxc is not set
 CONFIG_PACKAGE_wireless-tools=y
@@ -1913,8 +1911,8 @@ CONFIG_PACKAGE_libiwinfo-data=y
 # CONFIG_PACKAGE_ibt-firmware is not set
 # CONFIG_PACKAGE_iwl3945-firmware is not set
 # CONFIG_PACKAGE_iwl4965-firmware is not set
-# CONFIG_PACKAGE_iwlwifi-firmware-ax200 is not set
-# CONFIG_PACKAGE_iwlwifi-firmware-ax210 is not set
+CONFIG_PACKAGE_iwlwifi-firmware-ax200=y
+CONFIG_PACKAGE_iwlwifi-firmware-ax210=y
 # CONFIG_PACKAGE_iwlwifi-firmware-iwl100 is not set
 # CONFIG_PACKAGE_iwlwifi-firmware-iwl1000 is not set
 # CONFIG_PACKAGE_iwlwifi-firmware-iwl105 is not set
@@ -1952,8 +1950,8 @@ CONFIG_PACKAGE_libiwinfo-data=y
 # CONFIG_PACKAGE_p54-pci-firmware is not set
 # CONFIG_PACKAGE_p54-spi-firmware is not set
 # CONFIG_PACKAGE_p54-usb-firmware is not set
-# CONFIG_PACKAGE_r8152-firmware is not set
-# CONFIG_PACKAGE_r8169-firmware is not set
+CONFIG_PACKAGE_r8152-firmware=y
+CONFIG_PACKAGE_r8169-firmware=y
 # CONFIG_PACKAGE_radeon-firmware is not set
 # CONFIG_PACKAGE_rs9113-firmware is not set
 # CONFIG_PACKAGE_rt2800-pci-firmware is not set
@@ -2236,7 +2234,6 @@ CONFIG_PACKAGE_kmod-hwmon-pwmfan=y
 # CONFIG_PACKAGE_kmod-iio-bmp280-spi is not set
 # CONFIG_PACKAGE_kmod-iio-ccs811 is not set
 # CONFIG_PACKAGE_kmod-iio-core is not set
-# CONFIG_PACKAGE_kmod-iio-dht11 is not set
 # CONFIG_PACKAGE_kmod-iio-fxas21002c is not set
 # CONFIG_PACKAGE_kmod-iio-fxas21002c-i2c is not set
 # CONFIG_PACKAGE_kmod-iio-fxas21002c-spi is not set
@@ -2300,15 +2297,15 @@ CONFIG_PACKAGE_kmod-hwmon-pwmfan=y
 # CONFIG_PACKAGE_kmod-lib-842 is not set
 # CONFIG_PACKAGE_kmod-lib-cordic is not set
 CONFIG_PACKAGE_kmod-lib-crc-ccitt=y
-# CONFIG_PACKAGE_kmod-lib-crc-itu-t is not set
+CONFIG_PACKAGE_kmod-lib-crc-itu-t=y
 CONFIG_PACKAGE_kmod-lib-crc16=y
 CONFIG_PACKAGE_kmod-lib-crc32c=y
 # CONFIG_PACKAGE_kmod-lib-crc7 is not set
-# CONFIG_PACKAGE_kmod-lib-crc8 is not set
-# CONFIG_PACKAGE_kmod-lib-lz4 is not set
+CONFIG_PACKAGE_kmod-lib-crc8=y
+CONFIG_PACKAGE_kmod-lib-lz4=y
 CONFIG_PACKAGE_kmod-lib-lzo=y
 # CONFIG_PACKAGE_kmod-lib-textsearch is not set
-# CONFIG_PACKAGE_kmod-lib-zstd is not set
+CONFIG_PACKAGE_kmod-lib-zstd=y
 # CONFIG_PACKAGE_kmod-oid-registry is not set
 # end of Libraries
 
@@ -3016,7 +3013,6 @@ CONFIG_GOLANG_BUILD_CACHE_DIR=""
 # CONFIG_PACKAGE_golang-github-nextdns-nextdns-dev is not set
 # CONFIG_PACKAGE_golang-gitlab-yawning-obfs4-dev is not set
 # CONFIG_PACKAGE_golang-src is not set
-# CONFIG_PACKAGE_golang-torproject-tor-fw-helper-dev is not set
 # end of Go
 
 #
@@ -3602,6 +3598,7 @@ CONFIG_PERL_NOCOMMENT=y
 # CONFIG_PACKAGE_python3-pyfuse3 is not set
 # CONFIG_PACKAGE_python3-pyinotify is not set
 # CONFIG_PACKAGE_python3-pymysql is not set
+# CONFIG_PACKAGE_python3-pymysql-sha-pwd is not set
 # CONFIG_PACKAGE_python3-pynacl is not set
 # CONFIG_PACKAGE_python3-pyodbc is not set
 # CONFIG_PACKAGE_python3-pyopenssl is not set
@@ -4374,7 +4371,7 @@ CONFIG_OPENSSL_WITH_CMS=y
 #
 # CONFIG_OPENSSL_WITH_EC2M is not set
 CONFIG_OPENSSL_WITH_CHACHA_POLY1305=y
-CONFIG_OPENSSL_PREFER_CHACHA_OVER_GCM=y
+# CONFIG_OPENSSL_PREFER_CHACHA_OVER_GCM is not set
 CONFIG_OPENSSL_WITH_PSK=y
 
 #
@@ -4382,12 +4379,12 @@ CONFIG_OPENSSL_WITH_PSK=y
 #
 # CONFIG_OPENSSL_WITH_ARIA is not set
 # CONFIG_OPENSSL_WITH_CAMELLIA is not set
-CONFIG_OPENSSL_WITH_IDEA=y
-CONFIG_OPENSSL_WITH_SEED=y
+# CONFIG_OPENSSL_WITH_IDEA is not set
+# CONFIG_OPENSSL_WITH_SEED is not set
 # CONFIG_OPENSSL_WITH_SM234 is not set
 # CONFIG_OPENSSL_WITH_BLAKE2 is not set
-CONFIG_OPENSSL_WITH_MDC2=y
-CONFIG_OPENSSL_WITH_WHIRLPOOL=y
+# CONFIG_OPENSSL_WITH_MDC2 is not set
+# CONFIG_OPENSSL_WITH_WHIRLPOOL is not set
 # CONFIG_OPENSSL_WITH_COMPRESSION is not set
 # CONFIG_OPENSSL_WITH_RFC3779 is not set
 
@@ -4395,13 +4392,13 @@ CONFIG_OPENSSL_WITH_WHIRLPOOL=y
 # Engine/Hardware Support
 #
 CONFIG_OPENSSL_ENGINE=y
-CONFIG_OPENSSL_ENGINE_BUILTIN=y
-CONFIG_OPENSSL_ENGINE_BUILTIN_AFALG=y
-CONFIG_OPENSSL_ENGINE_BUILTIN_DEVCRYPTO=y
+# CONFIG_OPENSSL_ENGINE_BUILTIN is not set
+# CONFIG_PACKAGE_libopenssl-afalg is not set
+# CONFIG_PACKAGE_libopenssl-afalg_sync is not set
 CONFIG_PACKAGE_libopenssl-conf=y
-# CONFIG_PACKAGE_libopenssl-devcrypto is not set
+CONFIG_PACKAGE_libopenssl-devcrypto=y
 # CONFIG_PACKAGE_libopenssl-gost_engine is not set
-CONFIG_PACKAGE_libopenssl-legacy=y
+# CONFIG_PACKAGE_libopenssl-legacy is not set
 # CONFIG_PACKAGE_libwolfssl is not set
 
 #
@@ -4633,7 +4630,7 @@ CONFIG_LIBCURL_COOKIES=y
 # CONFIG_LIBCURL_SMB is not set
 # CONFIG_LIBCURL_SMTP is not set
 # CONFIG_LIBCURL_TELNET is not set
-CONFIG_LIBCURL_TFTP=y
+# CONFIG_LIBCURL_TFTP is not set
 CONFIG_LIBCURL_NGHTTP2=y
 
 #
@@ -6011,6 +6008,7 @@ CONFIG_PACKAGE_ddns-scripts=y
 # CONFIG_PACKAGE_ddns-scripts-route53 is not set
 CONFIG_PACKAGE_ddns-scripts-services=y
 # CONFIG_PACKAGE_ddns-scripts-transip is not set
+# CONFIG_PACKAGE_ddns-scripts-utils is not set
 # CONFIG_PACKAGE_ddns-scripts_aliyun is not set
 # CONFIG_PACKAGE_dhcp-forwarder is not set
 # CONFIG_PACKAGE_dns-forwarder is not set
@@ -6095,6 +6093,7 @@ CONFIG_PCAP_DNSPROXY_LISTENPORT=1053
 # CONFIG_PACKAGE_unbound-host is not set
 CONFIG_PACKAGE_v2ray-geoip=y
 CONFIG_PACKAGE_v2ray-geosite=y
+# CONFIG_PACKAGE_v2ray-geosite-ir is not set
 # CONFIG_PACKAGE_wsdd2 is not set
 # CONFIG_PACKAGE_zonestitcher is not set
 # end of IP Addresses and Names
@@ -6557,12 +6556,7 @@ CONFIG_PACKAGE_uhttpd=y
 # CONFIG_PACKAGE_uhttpd-mod-lua is not set
 CONFIG_PACKAGE_uhttpd-mod-ubus=y
 # CONFIG_PACKAGE_uhttpd-mod-ucode is not set
-CONFIG_PACKAGE_uwsgi=y
-CONFIG_PACKAGE_uwsgi-cgi-plugin=y
-# CONFIG_PACKAGE_uwsgi-logfile-plugin is not set
-CONFIG_PACKAGE_uwsgi-luci-support=y
-# CONFIG_PACKAGE_uwsgi-python3-plugin is not set
-CONFIG_PACKAGE_uwsgi-syslog-plugin=y
+# CONFIG_PACKAGE_uwsgi is not set
 CONFIG_PACKAGE_v2ray-plugin=y
 # CONFIG_PACKAGE_v2raya is not set
 # CONFIG_PACKAGE_xfrpc is not set
@@ -6600,15 +6594,11 @@ CONFIG_PACKAGE_hostapd-common=y
 # CONFIG_PACKAGE_hostapd-mbedtls is not set
 # CONFIG_PACKAGE_hostapd-mini is not set
 # CONFIG_PACKAGE_hostapd-openssl is not set
-# CONFIG_PACKAGE_hostapd-utils is not set
 # CONFIG_PACKAGE_hostapd-wolfssl is not set
 # CONFIG_PACKAGE_hs20-client is not set
 # CONFIG_PACKAGE_hs20-common is not set
 # CONFIG_PACKAGE_hs20-server is not set
-# CONFIG_PACKAGE_wpa-cli is not set
 # CONFIG_PACKAGE_wpa-supplicant is not set
-# CONFIG_WPA_RFKILL_SUPPORT is not set
-CONFIG_WPA_MSG_MIN_PRIORITY=3
 # CONFIG_WPA_WOLFSSL is not set
 CONFIG_DRIVER_11AC_SUPPORT=y
 # CONFIG_DRIVER_11AX_SUPPORT is not set
@@ -6626,7 +6616,7 @@ CONFIG_DRIVER_11AC_SUPPORT=y
 # CONFIG_PACKAGE_wpad is not set
 # CONFIG_PACKAGE_wpad-basic is not set
 # CONFIG_PACKAGE_wpad-basic-mbedtls is not set
-CONFIG_PACKAGE_wpad-basic-openssl=y
+# CONFIG_PACKAGE_wpad-basic-openssl is not set
 # CONFIG_PACKAGE_wpad-basic-wolfssl is not set
 # CONFIG_PACKAGE_wpad-mbedtls is not set
 # CONFIG_PACKAGE_wpad-mesh-mbedtls is not set
@@ -6708,6 +6698,7 @@ CONFIG_PACKAGE_chat=y
 # CONFIG_PACKAGE_dnstop is not set
 # CONFIG_PACKAGE_ds-lite is not set
 # CONFIG_PACKAGE_esniper is not set
+# CONFIG_PACKAGE_esp2net is not set
 # CONFIG_PACKAGE_etherwake is not set
 # CONFIG_PACKAGE_etherwake-nfqueue is not set
 # CONFIG_PACKAGE_ethtool is not set
@@ -6936,7 +6927,6 @@ CONFIG_PACKAGE_tcping=y
 # CONFIG_PACKAGE_tmate-ssh-server is not set
 # CONFIG_PACKAGE_tor is not set
 # CONFIG_PACKAGE_tor-basic is not set
-# CONFIG_PACKAGE_tor-fw-helper is not set
 # CONFIG_PACKAGE_trafficshaper is not set
 # CONFIG_PACKAGE_travelmate is not set
 # CONFIG_PACKAGE_tunneldigger is not set
@@ -7615,7 +7605,7 @@ CONFIG_PACKAGE_hwinfo=y
 # CONFIG_PACKAGE_iwcap is not set
 CONFIG_PACKAGE_iwinfo=y
 # CONFIG_PACKAGE_joker is not set
-CONFIG_PACKAGE_jq=y
+# CONFIG_PACKAGE_jq is not set
 CONFIG_PACKAGE_jshn=y
 # CONFIG_PACKAGE_kmod is not set
 # CONFIG_PACKAGE_lcd4linux-custom is not set
@@ -7633,7 +7623,7 @@ CONFIG_PACKAGE_libjson-script=y
 # CONFIG_PACKAGE_logrotate is not set
 # CONFIG_PACKAGE_lolcat is not set
 # CONFIG_PACKAGE_look is not set
-CONFIG_PACKAGE_losetup=y
+# CONFIG_PACKAGE_losetup is not set
 # CONFIG_PACKAGE_lrzsz is not set
 CONFIG_PACKAGE_lscpu=y
 # CONFIG_PACKAGE_lslocks is not set
@@ -7705,12 +7695,13 @@ CONFIG_PACKAGE_openssl-util=y
 # CONFIG_PACKAGE_pps-tools is not set
 # CONFIG_PACKAGE_prlimit is not set
 # CONFIG_PACKAGE_procps-ng is not set
+# CONFIG_PACKAGE_procs is not set
 # CONFIG_PACKAGE_progress is not set
 # CONFIG_PACKAGE_prometheus-node-exporter-lua is not set
 # CONFIG_PACKAGE_prometheus-statsd-exporter is not set
 # CONFIG_PACKAGE_pservice is not set
 # CONFIG_PACKAGE_psmisc is not set
-CONFIG_PACKAGE_pv=y
+# CONFIG_PACKAGE_pv is not set
 # CONFIG_PACKAGE_qca-ssdk-shell is not set
 # CONFIG_PACKAGE_qfirehose is not set
 CONFIG_PACKAGE_qmi-utils=y
@@ -7871,7 +7862,7 @@ CONFIG_PACKAGE_ucode-mod-lua=y
 # CONFIG_PACKAGE_usbids is not set
 # CONFIG_PACKAGE_usbutils is not set
 # CONFIG_PACKAGE_uuidd is not set
-CONFIG_PACKAGE_uuidgen=y
+# CONFIG_PACKAGE_uuidgen is not set
 # CONFIG_PACKAGE_uvcdynctrl is not set
 # CONFIG_PACKAGE_v2dat is not set
 # CONFIG_PACKAGE_v4l-utils is not set
