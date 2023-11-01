@@ -248,8 +248,6 @@ foreach my $mirror (@ARGV) {
 		}
 	} elsif ($mirror =~ /^\@OPENWRT$/) {
 		# use OpenWrt source server directly
-	} elsif ($mirror =~ /^\@IMMORTALWRT$/) {
-		# use ImmortalWrt source server directly
 	} elsif ($mirror =~ /^\@DEBIAN\/(.+)$/) {
 		push @mirrors, "https://mirrors.tencent.com/debian/$1";
 		push @mirrors, "https://mirrors.aliyun.com/debian/$1";
@@ -273,15 +271,9 @@ foreach my $mirror (@ARGV) {
 		push @mirrors, "https://apache.cs.utah.edu/apache.org/$1";
 		push @mirrors, "http://apache.mirrors.ovh.net/ftp.apache.org/dist/$1";
 	} elsif ($mirror =~ /^\@GITHUB\/(.+)$/) {
-		my $dir = $1;
-		my $i = 0;
-		# replace the 2nd '/' with '@' for jsDelivr mirror
-		push @mirrors, "https://cdn.jsdelivr.net/gh/". $dir =~ s{\/}{++$i == 2 ? '@' : $&}ger;
-		push @mirrors, "https://raw.sevencdn.com/$dir";
-		push @mirrors, "https://raw.fastgit.org/$dir";
 		# give github a few more tries (different mirrors)
 		for (1 .. 5) {
-			push @mirrors, "https://raw.githubusercontent.com/$dir";
+			push @mirrors, "https://raw.githubusercontent.com/$1";
 		}
 	} elsif ($mirror =~ /^\@GNU\/(.+)$/) {
 		push @mirrors, "https://mirrors.tencent.com/gnu/$1";
@@ -309,9 +301,7 @@ foreach my $mirror (@ARGV) {
 			push @extra, "$extra[0]/longterm/v$1";
 		}
 		foreach my $dir (@extra) {
-			push @mirrors, "https://mirror.iscas.ac.cn/kernel.org/$dir";
 			push @mirrors, "https://mirrors.ustc.edu.cn/kernel.org/$dir";
-			push @mirrors, "https://mirror.nju.edu.cn/kernel.org/$dir";
 			push @mirrors, "https://cdn.kernel.org/pub/$dir";
 			push @mirrors, "https://mirrors.mit.edu/kernel/$dir";
 			push @mirrors, "http://ftp.nara.wide.ad.jp/pub/kernel.org/$dir";
@@ -321,7 +311,6 @@ foreach my $mirror (@ARGV) {
 		}
 	} elsif ($mirror =~ /^\@GNOME\/(.+)$/) {
 		push @mirrors, "https://mirrors.ustc.edu.cn/gnome/sources/$1";
-		push @mirrors, "https://mirror.nju.edu.cn/gnome/$1";
 		push @mirrors, "https://download.gnome.org/sources/$1";
 		push @mirrors, "https://mirror.csclub.uwaterloo.ca/gnome/sources/$1";
 		push @mirrors, "https://ftp.acc.umu.se/pub/GNOME/sources/$1";
@@ -332,11 +321,6 @@ foreach my $mirror (@ARGV) {
 	}
 }
 
-# push @mirrors, 'https://mirror01.download.immortalwrt.eu.org';
-push @mirrors, 'https://mirror2.immortalwrt.org/sources';
-push @mirrors, 'https://mirror.immortalwrt.org/sources';
-push @mirrors, 'https://sources-cdn.immortalwrt.org';
-push @mirrors, 'https://sources.immortalwrt.org';
 push @mirrors, 'https://sources.cdn.openwrt.org';
 push @mirrors, 'https://sources.openwrt.org';
 push @mirrors, 'https://mirror2.openwrt.org/sources';
