@@ -25,6 +25,6 @@ if [ -z "$opkg_mirror" ]; then
 	uci -q commit system
 fi
 
-sed -i.bak "s,https://downloads.immortalwrt.org,$opkg_mirror,g" "/etc/opkg/distfeeds.conf"
+sed -i.bak "s,https://downloads.openwrt.org,$opkg_mirror,g" "/etc/opkg/distfeeds.conf"
 
 exit 0

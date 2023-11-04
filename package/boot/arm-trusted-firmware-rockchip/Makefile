@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
-# Copyright (C) 2021-2023 ImmortalWrt.org
+# Copyright (C) 2021-2023 OpenWrt.org
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/trusted-firmware-a.mk
