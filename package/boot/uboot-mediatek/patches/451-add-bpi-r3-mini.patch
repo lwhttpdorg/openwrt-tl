@@ -540,7 +540,7 @@
 +++ b/bananapi_bpi-r3-mini_emmc_env
 @@ -0,0 +1,55 @@
 +ipaddr=192.168.1.1
-+serverip=192.168.1.254
++serverip=192.168.1.2
 +loadaddr=0x46000000
 +console=earlycon=uart8250,mmio32,0x11002000 console=ttyS0
 +bootargs=root=/dev/mmcblk0p65
