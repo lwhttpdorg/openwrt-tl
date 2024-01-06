@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=urngd
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL=$(PROJECT_GIT)/project/urngd.git
-PKG_SOURCE_DATE:=2020-01-21
-PKG_SOURCE_VERSION:=c7f7b6b65b82eda4675b42d8cd28d76ea7aebf1a
-PKG_MIRROR_HASH:=2d31025b79fe130c579d6c3f4bf4dc12abc43a7319b20a5cdca24ae363ec70f3
+PKG_SOURCE_DATE:=2023-11-01
+PKG_SOURCE_VERSION:=44365eb1e1165f2a44cb31f404b04cf85031718e
+PKG_MIRROR_HASH:=743bdfacf1f1e779047a55fe8f388aaf31f6e55e8a4d0a00fcabffb68af2202e
 
 PKG_LICENSE:=GPL-2.0 BSD-3-Clause
 PKG_LICENSE_FILES:=
@@ -37,6 +37,10 @@ define Package/urngd/description
   entropy. Especially during boot time, when the entropy of Linux is low, the
   Jitter RNGd provides a source of sufficient entropy.
 endef
+
+ifdef CONFIG_USE_GLIBC
+  TARGET_LDFLAGS += -lpthread
+endif
 
 define Package/urngd/install
 	$(INSTALL_DIR) $(1)/etc/init.d

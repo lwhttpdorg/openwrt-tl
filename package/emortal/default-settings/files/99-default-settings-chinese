@@ -1,18 +1,25 @@
 #!/bin/sh
 
-uci -q batch <<-EOF
-	set system.@system[0].timezone='CST-8'
-	set system.@system[0].zonename='Asia/Shanghai'
+uci -q get system.@imm_init[0] > "/dev/null" || uci -q add system imm_init > "/dev/null"
 
-	delete system.ntp.server
-	add_list system.ntp.server='0.cn.pool.ntp.org'
-	add_list system.ntp.server='1.cn.pool.ntp.org'
-	add_list system.ntp.server='2.cn.pool.ntp.org'
-	add_list system.ntp.server='3.cn.pool.ntp.org'
-EOF
 uci commit system
 
-#sed -i 's,downloads.openwrt.org,mirrors.tencent.com/lede,g' /etc/opkg/distfeeds.conf
-sed -i 's,downloads.openwrt.org,mirrors.vsean.net/openwrt,g' /etc/opkg/distfeeds.conf
+if ! uci -q get system.@imm_init[0].system_chn > "/dev/null"; then
+	uci -q batch <<-EOF
+		set system.@system[0].timezone="CST-8"
+		set system.@system[0].zonename="Asia/Shanghai"
+
+		delete system.ntp.server
+		add_list system.ntp.server="0.cn.pool.ntp.org"
+		add_list system.ntp.server="1.cn.pool.ntp.org"
+		add_list system.ntp.server="2.cn.pool.ntp.org"
+		add_list system.ntp.server="3.cn.pool.ntp.org"
+
+		set system.@imm_init[0].system_chn="1"
+		commit system
+	EOF
+fi
+
+sed -i.bak "s,downloads.immortalwrt.org,mirrors.vsean.net/openwrt,g" "/etc/opkg/distfeeds.conf"
 
 exit 0
