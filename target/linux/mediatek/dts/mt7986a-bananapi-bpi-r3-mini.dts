@@ -1,24 +1,28 @@
-// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 /*
- * Copyright (C) 2023 Tianling Shen <cnsztl@immortalwrt.org>
+ * Copyright (C) 2021 MediaTek Inc.
+ * Authors: Sam.Shih <sam.shih@mediatek.com>
+ *          Frank Wunderlich <frank-w@public-files.de>
+ *          Daniel Golle <daniel@makrotopia.org>
  */
 
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
+#include <dt-bindings/pinctrl/mt65xx.h>
 
 #include "mt7986a.dtsi"
 
 / {
-	model = "Bananapi BPi-R3 Mini";
+	model = "Bananapi BPi-R3 mini";
 	chassis-type = "embedded";
 	compatible = "bananapi,bpi-r3-mini", "mediatek,mt7986a";
 
 	aliases {
+		serial0 = &uart0;
 		ethernet0 = &gmac0;
 		ethernet1 = &gmac1;
-		serial0 = &uart0;
 
 		led-boot = &status_led;
 		led-failsafe = &status_led;
@@ -63,14 +67,6 @@
 		};
 	};
 
-	fan: pwm-fan {
-		compatible = "pwm-fan";
-		#cooling-cells = <2>;
-		cooling-levels = <0 128 255>;
-		pwms = <&pwm 0 10000 0>;
-		status = "okay";
-	};
-
 	reg_1p8v: regulator-1p8v {
 		compatible = "regulator-fixed";
 		regulator-name = "fixed-1.8V";
@@ -97,34 +93,14 @@
 		regulator-boot-on;
 		regulator-always-on;
 	};
-
-	usb_vbus: regulator-usb-vbus {
-		compatible = "regulator-fixed";
-		regulator-name = "usb_vbus";
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-		gpios = <&pio 20 GPIO_ACTIVE_LOW>;
-		regulator-boot-on;
-	};
 };
 
-&cpu_thermal {
-	cooling-maps {
-		cpu-active-low {
-			cooling-device = <&fan 0 0>;
-			trip = <&cpu_trip_active_low>;
-		};
+&auxadc {
+	status = "okay";
+};
 
-		cpu-active-med {
-			cooling-device = <&fan 1 1>;
-			trip = <&cpu_trip_active_med>;
-		};
-
-		cpu-active-high {
-			cooling-device = <&fan 2 2>;
-			trip = <&cpu_trip_active_high>;
-		};
-	};
+&watchdog {
+	status = "okay";
 };
 
 &crypto {
@@ -165,7 +141,9 @@
 		#size-cells = <0>;
 
 		phy14: phy@14 {
+			/* EN8811H PHY ID */
 			compatible = "ethernet-phy-id03a2.a411";
+			/* PHY Address */
 			reg = <14>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&en8811_pwr_a>;
@@ -174,7 +152,7 @@
 
 			interrupt-parent = <&pio>;
 			interrupts = <48 IRQ_TYPE_LEVEL_HIGH>;
-			reset-gpios = <&pio 49 1>;
+			reset-gpios = <&pio 49 1>;     /* GPIO49 */
 			reset-assert-us = <10000>;
 			reset-deassert-us = <20000>;
 
@@ -184,7 +162,9 @@
 		};
 
 		phy15: phy@15 {
+			/* EN8811H PHY ID */
 			compatible = "ethernet-phy-id03a2.a411";
+			/* PHY Address */
 			reg = <15>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&en8811_pwr_b>;
@@ -193,7 +173,7 @@
 
 			interrupt-parent = <&pio>;
 			interrupts = <46 IRQ_TYPE_LEVEL_HIGH>;
-			reset-gpios = <&pio 47 1>;
+			reset-gpios = <&pio 47 1>;     /* GPIO47 */
 			reset-assert-us = <10000>;
 			reset-deassert-us = <20000>;
 
@@ -204,16 +184,29 @@
 	};
 };
 
+&hnat {
+	mtketh-wan = "eth1";
+	mtketh-lan = "eth0";
+	mtketh-max-gmac = <2>;
+	status = "okay";
+};
+
 &i2c0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c_pins>;
 	status = "okay";
 
+	/* MAC Address EEPROM */
 	eeprom@50 {
 		compatible = "atmel,24c02";
 		reg = <0x50>;
 		pagesize = <8>;
 		size = <256>;
+	};
+
+	wm8960: wm8960@1a {
+		compatible = "wlf,wm8960";
+		reg = <0x1a>;
 	};
 };
 
@@ -377,6 +370,13 @@
 		};
 	};
 
+	uart2_pins: uart2-pins {
+		mux {
+			function = "uart";
+			groups = "uart2";
+		};
+	};
+
 	usb_ngff_pins: usb-ngff-pins {
 		ngff-pe-rst {
 			pins = "GPIO_7";
@@ -398,6 +398,12 @@
 			drive-strength = <8>;
 			mediatek,pull-up-adv = <1>;
 		};
+	};
+
+	usb_pwwr_en: usb-pwwr-en {
+		pins = "GPIO_15";
+		drive-strength = <8>;
+		mediatek,pull-down-adv = <1>;
 	};
 
 	wf_2g_5g_pins: wf-2g-5g-pins {
@@ -444,6 +450,7 @@
 &spi0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi_flash_pins>;
+	cs-gpios = <0>, <0>;
 	status = "okay";
 
 	flash@0 {
@@ -499,9 +506,10 @@
 
 &ssusb {
 	pinctrl-names = "default";
-	pinctrl-0 = <&usb_ngff_pins>;
+	pinctrl-0 = <&usb_pwwr_en>;
+	pinctrl-1 = <&usb_ngff_pins>;
 	vusb33-supply = <&reg_3p3v>;
-	vbus-supply = <&usb_vbus>;
+	vbus-supply = <&reg_5v>;
 	status = "okay";
 };
 
@@ -517,6 +525,12 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart1_pins>;
 	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pins>;
+	status = "disabled";
 };
 
 &usb_phy {
