@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-only
 #
 # Copyright (C) 2021 Lean <coolsnowwolf@gmail.com>
 #
@@ -11,9 +12,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=default-settings
-PKG_RELEASE:=27
+PKG_RELEASE:=29
 
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-2.0-only
 
 include $(INCLUDE_DIR)/package.mk
 
