@@ -11,7 +11,9 @@ use strict;
 use warnings;
 use File::Basename;
 use File::Copy;
+use File::Path;
 use Text::ParseWords;
+use JSON::PP;
 
 @ARGV > 2 or die "Syntax: $0 <target dir> <filename> <hash> <url filename> [<mirror> ...]\n";
 
@@ -54,6 +56,21 @@ sub localmirrors {
 	$mirror and push @mlist, split(/;/, $mirror);
 
 	return @mlist;
+}
+
+sub projectsmirrors {
+	my $project = shift;
+	my $append = shift;
+
+	open (PM, "$scriptdir/projectsmirrors.json") ||
+		die "Can´t open $scriptdir/projectsmirrors.json: $!\n";
+	local $/;
+	my $mirror_json = <PM>;
+	my $mirror = decode_json $mirror_json;
+
+	foreach (@{$mirror->{$project}}) {
+		push @mirrors, $_ . "/" . ($append or "");
+	}
 }
 
 sub which($) {
@@ -157,7 +174,7 @@ sub download
 		}
 
 		if (! -d "$target") {
-			system("mkdir", "-p", "$target/");
+			make_path($target);
 		}
 
 		if (! open TMPDLS, "find $mirror -follow -name $filename 2>/dev/null |") {
@@ -228,7 +245,7 @@ sub download
 	};
 
 	unlink "$target/$filename";
-	system("mv", "$target/$filename.dl", "$target/$filename");
+	move("$target/$filename.dl", "$target/$filename");
 	cleanup();
 }
 
@@ -244,57 +261,29 @@ foreach my $mirror (@ARGV) {
 	if ($mirror =~ /^\@SF\/(.+)$/) {
 		# give sourceforge a few more tries, because it redirects to different mirrors
 		for (1 .. 5) {
-			push @mirrors, "https://downloads.sourceforge.net/$1";
+			projectsmirrors '@SF', $1;
 		}
 	} elsif ($mirror =~ /^\@OPENWRT$/) {
 		# use OpenWrt source server directly
 	} elsif ($mirror =~ /^\@DEBIAN\/(.+)$/) {
-		push @mirrors, "https://mirrors.tencent.com/debian/$1";
-		push @mirrors, "https://mirrors.aliyun.com/debian/$1";
-		push @mirrors, "https://mirrors.tuna.tsinghua.edu.cn/debian/$1";
-		push @mirrors, "https://mirrors.ustc.edu.cn/debian/$1";
-		push @mirrors, "https://ftp.debian.org/debian/$1";
-		push @mirrors, "https://mirror.leaseweb.com/debian/$1";
-		push @mirrors, "https://mirror.netcologne.de/debian/$1";
+		projectsmirrors '@DEBIAN', $1;
 	} elsif ($mirror =~ /^\@APACHE\/(.+)$/) {
-		push @mirrors, "https://mirrors.tencent.com/apache/$1";
-		push @mirrors, "https://mirrors.aliyun.com/apache/$1";
-		push @mirrors, "https://mirrors.tuna.tsinghua.edu.cn/apache/$1";
-		push @mirrors, "https://mirrors.ustc.edu.cn/apache/$1";
-		push @mirrors, "https://dlcdn.apache.org/$1";
-		push @mirrors, "https://mirror.aarnet.edu.au/pub/apache/$1";
-		push @mirrors, "https://mirror.csclub.uwaterloo.ca/apache/$1";
-		push @mirrors, "https://archive.apache.org/dist/$1";
-		push @mirrors, "https://mirror.cogentco.com/pub/apache/$1";
-		push @mirrors, "https://mirror.navercorp.com/apache/$1";
-		push @mirrors, "https://ftp.jaist.ac.jp/pub/apache/$1";
-		push @mirrors, "https://apache.cs.utah.edu/apache.org/$1";
-		push @mirrors, "http://apache.mirrors.ovh.net/ftp.apache.org/dist/$1";
+		projectsmirrors '@APACHE', $1;
 	} elsif ($mirror =~ /^\@GITHUB\/(.+)$/) {
+		my $dir = $1;
+		my $i = 0;
+		# replace the 2nd '/' with '@' for jsDelivr mirror
+		push @mirrors, "https://fastly.jsdelivr.net/gh/". $dir =~ s{\/}{++$i == 2 ? '@' : $&}ger;
+		push @mirrors, "https://raw.gitmirror.com/$1";
 		# give github a few more tries (different mirrors)
 		for (1 .. 5) {
+			projectsmirrors '@GITHUB', $1;
 			push @mirrors, "https://raw.githubusercontent.com/$1";
 		}
 	} elsif ($mirror =~ /^\@GNU\/(.+)$/) {
-		push @mirrors, "https://mirrors.tencent.com/gnu/$1";
-		push @mirrors, "https://mirrors.aliyun.com/gnu/$1";
-		push @mirrors, "https://mirrors.tuna.tsinghua.edu.cn/gnu/$1";
-		push @mirrors, "https://mirrors.ustc.edu.cn/gnu/$1";
-		push @mirrors, "https://ftpmirror.gnu.org/$1";
-		push @mirrors, "https://mirror.csclub.uwaterloo.ca/gnu/$1";
-		push @mirrors, "https://mirror.netcologne.de/gnu/$1";
-		push @mirrors, "https://ftp.kddilabs.jp/GNU/gnu/$1";
-		push @mirrors, "https://www.nic.funet.fi/pub/gnu/gnu/$1";
-		push @mirrors, "https://mirror.navercorp.com/gnu/$1";
-		push @mirrors, "https://mirrors.rit.edu/gnu/$1";
-		push @mirrors, "https://ftp.gnu.org/gnu/$1";
+		projectsmirrors '@GNU', $1;
 	} elsif ($mirror =~ /^\@SAVANNAH\/(.+)$/) {
-		push @mirrors, "https://download.savannah.nongnu.org/releases/$1";
-		push @mirrors, "https://mirror.netcologne.de/savannah/$1";
-		push @mirrors, "https://mirror.csclub.uwaterloo.ca/nongnu/$1";
-		push @mirrors, "https://ftp.acc.umu.se/mirror/gnu.org/savannah/$1";
-		push @mirrors, "https://nongnu.uib.no/$1";
-		push @mirrors, "https://cdimage.debian.org/mirror/gnu.org/savannah/$1";
+		projectsmirrors '@SAVANNAH', $1;
 	} elsif ($mirror =~ /^\@KERNEL\/(.+)$/) {
 		my @extra = ( $1 );
 		if ($filename =~ /linux-\d+\.\d+(?:\.\d+)?-rc/) {

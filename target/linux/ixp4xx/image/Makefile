@@ -49,7 +49,7 @@ endef
 define Device/dlink_dsm_g600_a
 	DEVICE_VENDOR := D-Link
 	DEVICE_MODEL := DSM G600 A
-	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-pcf8563 kmod-via-velocity kmod-ata-artop kmod-ath5k wpad-basic-mbedtls
+	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-pcf8563 kmod-via-velocity kmod-ata-artop kmod-ath5k wpad-openssl
 	DEVICE_DTS := intel-ixp42x-dlink-dsm-g600
 	KERNEL := kernel-bin | append-dtb
 	IMAGES := kernel.bin rootfs.bin
@@ -61,7 +61,7 @@ TARGET_DEVICES += dlink_dsm_g600_a
 define Device/freecom_fsg_3
 	DEVICE_VENDOR := Freecom
 	DEVICE_MODEL := FSG-3
-	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-isl1208 kmod-ath5k wpad-basic-mbedtls
+	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-isl1208 kmod-ath5k wpad-basic-openssl
 	# Only 4 MB of Flash so not building by default
 	DEFAULT := n
 	DEVICE_DTS := intel-ixp42x-freecom-fsg-3
@@ -124,11 +124,27 @@ define Device/linksys_nslu2
 endef
 TARGET_DEVICES += linksys_nslu2
 
+define Device/netgear_wg302v1
+	DEVICE_VENDOR := Netgear
+	DEVICE_MODEL := WG302 v1
+	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-phy-amd kmod-ath5k \
+		wpad-basic-openssl kmod-input-gpio-keys-polled
+	# Only 32 MB of RAM and small flash so not building by default
+	DEFAULT := n
+	DEVICE_DTS := intel-ixp42x-netgear-wg302v1
+	KERNEL := kernel-bin | append-dtb
+	IMAGES := kernel.bin rootfs.bin
+	IMAGE/kernel.bin := append-kernel
+	IMAGE/rootfs.bin := append-rootfs | pad-rootfs | pad-to 128k
+	IMAGE/sysupgrade.bin := append-rootfs | pad-rootfs | pad-to 128k | append-metadata
+endef
+TARGET_DEVICES += netgear_wg302v1
+
 define Device/usrobotics_usr8200
 	DEVICE_VENDOR := USRobotics
 	DEVICE_MODEL := USR8200
 	# USB2 is compiled in and needs no package
-	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-r7301 kmod-firewire kmod-firewire-ohci
+	DEVICE_PACKAGES := ixp4xx-microcode-ethernet kmod-rtc-r7301 kmod-firewire kmod-firewire-ohci kmod-dsa-mv88e6060
 	DEVICE_DTS := intel-ixp42x-usrobotics-usr8200
 	KERNEL := kernel-bin | append-dtb
 	IMAGES := kernel.bin rootfs.bin
