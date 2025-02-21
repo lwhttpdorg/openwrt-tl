@@ -6,10 +6,18 @@
 ifneq ($(__target_inc),1)
 __target_inc=1
 
-# default device type
+
+##@
+# @brief Default device type ( basic | nas | router ).
+##
 DEVICE_TYPE?=router
 
-# Default packages - the really basic set
+##@
+# @brief Default packages.
+#
+# The really basic set. Additional packages are added based on @DEVICE_TYPE and
+# @CONFIG_* values.
+##
 DEFAULT_PACKAGES:=\
 	base-files \
 	ca-bundle \
@@ -26,43 +34,28 @@ DEFAULT_PACKAGES:=\
 	urandom-seed \
 	urngd
 
-ifdef CONFIG_USE_APK
-DEFAULT_PACKAGES+=apk
-else
-DEFAULT_PACKAGES+=opkg
-endif
-
-ifneq ($(CONFIG_SELINUX),)
-DEFAULT_PACKAGES+=busybox-selinux procd-selinux
-else
-DEFAULT_PACKAGES+=busybox procd
-endif
-
-# include ujail on systems with enough storage
-ifeq ($(CONFIG_SMALL_FLASH),)
-DEFAULT_PACKAGES+=procd-ujail
-endif
-
-# include seccomp ld-preload hooks if kernel supports it
-ifneq ($(CONFIG_SECCOMP),)
-DEFAULT_PACKAGES+=procd-seccomp
-endif
-
-# For the basic set
+##@
+# @brief Default packages for @DEVICE_TYPE basic.
+##
 DEFAULT_PACKAGES.basic:=
-# For nas targets
+##@
+# @brief Default packages for @DEVICE_TYPE nas.
+##
 DEFAULT_PACKAGES.nas:=\
 	block-mount \
 	fdisk \
 	lsblk \
 	mdadm
-# For router targets
+##@
+# @brief Default packages for @DEVICE_TYPE router.
+##
 DEFAULT_PACKAGES.router:=\
 	dnsmasq-full \
 	firewall4 \
 	nftables \
 	kmod-nft-offload \
-	ipv6helper \
+	odhcp6c \
+	odhcpd-ipv6only \
 	ppp \
 	ppp-mod-pppoe
 # For easy usage
@@ -74,7 +67,7 @@ DEFAULT_PACKAGES.tweak:=\
 	kmod-nf-nathelper-extra \
 	luci-light \
 	luci-app-cpufreq \
-	luci-app-opkg \
+	luci-app-package-manager \
 	luci-compat \
 	luci-lib-base \
 	luci-lib-ipkg
@@ -110,13 +103,29 @@ else
   endif
 endif
 
-# Add tweaked packages
-# DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.tweak)
+# include ujail on systems with enough storage
+ifeq ($(filter small_flash,$(FEATURES)),)
+  DEFAULT_PACKAGES+=procd-ujail
+endif
 
 # Add device specific packages (here below to allow device type set from subtarget)
 DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.$(DEVICE_TYPE))
 
+# Add tweaked packages
+# DEFAULT_PACKAGES += $(DEFAULT_PACKAGES.tweak)
+
+##@
+# @brief Filter out packages, prepended with `-`.
+#
+# @param 1: Package list.
+##
 filter_packages = $(filter-out -% $(patsubst -%,%,$(filter -%,$(1))),$(1))
+
+##@
+# @brief Append extra package dependencies.
+#
+# @param 1: Package list.
+##
 extra_packages = $(if $(filter wpad wpad-% nas,$(1)),iwinfo)
 
 define ProfileDefault
@@ -341,7 +350,15 @@ ifeq ($(DUMP),1)
     ifneq ($(CONFIG_CPU_MIPS32_R2),)
       FEATURES += mips16
     endif
-    FEATURES += $(foreach v,6 7,$(if $(CONFIG_CPU_V$(v)),arm_v$(v)))
+    ifneq ($(CONFIG_CPU_V6),)
+      FEATURES += arm_v6
+    endif
+    ifneq ($(CONFIG_CPU_V6K),)
+      FEATURES += arm_v6
+    endif
+    ifneq ($(CONFIG_CPU_V7),)
+      FEATURES += arm_v7
+    endif
 
     # remove duplicates
     FEATURES:=$(sort $(FEATURES))
@@ -374,6 +391,7 @@ define BuildTargets/DumpCurrent
 	 echo 'Target-Description:'; \
 	 echo "$$$$DESCRIPTION"; \
 	 echo '@@'; \
+	 $(if $(DEFAULT_PROFILE),echo 'Target-Default-Profile: $(DEFAULT_PROFILE)';) \
 	 echo 'Default-Packages: $(DEFAULT_PACKAGES) $(call extra_packages,$(DEFAULT_PACKAGES))'; \
 	 $(DUMPINFO)
 	$(if $(CUR_SUBTARGET),$(SUBMAKE) -r --no-print-directory -C image -s DUMP=1 SUBTARGET=$(CUR_SUBTARGET))
